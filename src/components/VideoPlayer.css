@@ -1,0 +1,98 @@
+.video-player-container {
+    width: 100%;
+    height: 100%;
+    position: relative;
+    background-color: #000;
+    scroll-snap-align: start; /* 关键：让每个视频项在滚动时能独立对齐 */
+}
+
+.video-player {
+    width: 100%;
+    height: 100%;
+    object-fit: contain; /* 保持视频比例，完整显示 */
+}
+
+.video-overlay-info {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    color: #fff;
+    padding: 15px;
+    text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.5);
+    width: calc(100% - 80px); /* 留出右侧操作栏空间 */
+}
+
+.uploader-username {
+    font-weight: bold;
+    font-size: 1.1em;
+    text-decoration: none;
+    color: #fff;
+    display: block;
+    margin-bottom: 5px;
+}
+
+.video-title {
+    font-size: 0.9em;
+    margin: 0;
+}
+
+.video-overlay-actions {
+    position: absolute;
+    bottom: 20px;
+    right: 10px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 20px;
+    color: #fff;
+}
+
+.action-item {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    cursor: pointer;
+}
+
+.uploader-avatar-link {
+    position: relative;
+    margin-bottom: 5px; /* 为+号留出空间 */
+}
+
+.uploader-avatar {
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    border: 2px solid #fff;
+    object-fit: cover;
+}
+
+.follow-plus {
+    position: absolute;
+    bottom: -10px;
+    left: 50%;
+    transform: translateX(-50%);
+    background-color: #FE2C55;
+    color: #fff;
+    width: 20px;
+    height: 20px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: bold;
+}
+
+.video-action-icon {
+    font-size: 2.2em;
+    text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.3);
+}
+
+.video-action-icon.liked {
+    color: #FE2C55;
+}
+
+.action-count {
+    font-size: 0.8em;
+    font-weight: bold;
+}
