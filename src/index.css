@@ -1,3 +1,4 @@
+/* src/index.css */
 body {
   margin: 0;
   font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
@@ -5,9 +6,14 @@ body {
     sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+  
+  /* --- 暗黑主题核心 --- */
+  background-color: #000000; /* 全局背景设为纯黑 */
+  color: #ffffff; /* 全局文字设为白色 */
 }
 
-code {
-  font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
-    monospace;
+/* 覆盖默认的链接颜色 */
+a {
+  color: #f1f1f1;
+  text-decoration: none;
 }

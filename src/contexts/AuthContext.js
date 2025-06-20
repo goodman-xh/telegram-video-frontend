@@ -1,61 +1,57 @@
-// src/contexts/AuthContext.js
 import React, { createContext, useState, useEffect, useContext } from 'react';
 import api from '../api';
 
-// 创建 Auth Context
 const AuthContext = createContext(null);
 
-// 创建一个自定义Hook，方便其他组件使用Auth Context
 export const useAuth = () => useContext(AuthContext);
 
-// 创建 Provider 组件
 export const AuthProvider = ({ children }) => {
-    const [user, setUser] = useState(null); // 存储从我们后端获取的用户信息
+    const [user, setUser] = useState(null);
     const [loading, setLoading] = useState(true);
-    const [error, setError] = useState('');
+    const [isAuthenticated, setIsAuthenticated] = useState(false);
 
     useEffect(() => {
         const verifyUser = async () => {
-            try {
-                // 检查是否在Telegram环境中
-                if (window.Telegram && window.Telegram.WebApp) {
-                    const tg = window.Telegram.WebApp;
-                    tg.ready(); // 通知Telegram应用已准备好
-                    
-                    const initData = tg.initData;
-                    if (!initData) {
-                        throw new Error('无法获取Telegram initData');
-                    }
+            console.log('[Auth] 认证流程开始...');
+            
+            // **核心修正**: 不再轮询，直接读取我们在index.html中保存的全局变量
+            const initData = window.myTelegramInitData;
 
-                    // 调用后端的 /api/auth/verify 接口
+            if (initData && initData.length > 0) {
+                console.log('[Auth] 成功从全局变量获取到 initData。');
+                try {
+                    console.log('[Auth] 正在向后端发送验证请求...');
                     const response = await api.post('/auth/verify', { initData });
+                    console.log('[Auth] 收到后端响应:', response.data);
 
-                    if (response.data.success) {
-                        setUser(response.data.user); // 登录成功，设置用户信息
-                        console.log('用户验证成功:', response.data.user);
+                    if (response.data.success && response.data.user) {
+                        setUser(response.data.user);
+                        setIsAuthenticated(true);
+                        console.log('[Auth] 认证成功！');
                     } else {
-                        throw new Error(response.data.error || '验证失败');
+                        throw new Error(response.data.error || '后端返回验证失败');
                     }
-                } else {
-                     // 非Telegram环境的模拟数据，方便在浏览器中调试
-                    console.warn('非Telegram环境，使用模拟用户数据进行调试。');
-                    setUser({ id: 1, telegram_user_id: 12345, username: 'testuser', first_name: 'Test', plan_type: 'free' });
+                } catch(err) {
+                    console.error('[Auth] 后端验证过程中发生错误:', err);
+                    setIsAuthenticated(false);
                 }
-            } catch (err) {
-                console.error('认证流程出错:', err);
-                setError(err.message);
-            } finally {
-                setLoading(false);
+            } else {
+                console.error('[Auth] 致命错误: 全局变量中没有找到initData。小程序可能未在Telegram中正确启动。');
+                setIsAuthenticated(false);
             }
+
+            setLoading(false);
+            console.log('[Auth] 认证流程结束。');
         };
 
+        // 直接执行，不再需要延时或轮询
         verifyUser();
-    }, []); // 这个 effect 只在组件首次加载时运行一次
+    }, []);
 
     const value = {
         user,
         loading,
-        error,
+        isAuthenticated,
     };
 
     return (
